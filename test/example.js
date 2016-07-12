@@ -1,6 +1,6 @@
-var idsPath = 'app.components.Foo';
+const idsPath = 'app.components.Foo';
 
-module.exports = {
+export default {
   title: {
     defaultMessage: 'Title'
   },
