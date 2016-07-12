@@ -1,3 +1,7 @@
+.idea
+
 src
+
 *.log
+
 DS_Store
