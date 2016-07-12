@@ -1,10 +1,10 @@
-const idsPath = 'app.components.Foo';
+const idsPath = 'app.components.Header'
 
 export default {
-  title: {
-    defaultMessage: 'Title'
+  "title": {
+    defaultMessage: 'Title',
   },
-  description: {
-    defaultMessage: 'Description'
-  }
-};
+  search: {
+    defaultMessage: 'Find channels or videos',
+  },
+}
