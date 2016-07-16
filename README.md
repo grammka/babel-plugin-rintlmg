@@ -9,8 +9,10 @@ defineMessages({
   title: {
     defaultMessage: 'Title',
   },
+  description: 'Description',
   search: {
     defaultMessage: 'Find smth...',
+    description: 'Input on the left side of Header'
   },
 })
 ```
@@ -25,9 +27,14 @@ export default defineMessages({
     id: 'app.components.Header.title',
     defaultMessage: 'Title'
   },
+  {
+    id: 'app.components.Header.description',
+    defaultMessage: 'Description'
+  },
   search: {
     id: 'app.components.Header.search',
-    defaultMessage: 'Find smth...'
+    defaultMessage: 'Find smth...',
+    description: 'Input on the left side of Header'
   }
 });
 ```

@@ -14,5 +14,5 @@ fs.readFile(fileName, function(err, data) {
     plugins: [ plugin ]
   });
 
-  //console.log(out.code);
+  console.log(out.code);
 });

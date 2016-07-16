@@ -36,13 +36,25 @@ module.exports = function(babel) {
 
         path.node.arguments[0].properties.splice(0, 1);
 
-        path.node.arguments[0].properties.forEach(function(item) {
-          var key = item.key.value || item.key.name;
-          var idPath = `${ ids }.${ key }`;
+        path.node.arguments[0].properties.forEach(function(property, index) {
+          var key       = property.key.value || property.key.name;
+          var value     = property.value.value || property.value.name;
+          var idPath    = `${ ids }.${ key }`;
 
-          item.value.properties.unshift(
-            t.objectProperty(t.identifier('id'), t.stringLiteral(idPath))
-          )
+          if (t.isObjectExpression(property.value)) {
+            property.value.properties.unshift(
+              t.objectProperty(t.identifier('id'), t.stringLiteral(idPath))
+            )
+          }
+          else if (t.isStringLiteral(property.value)) {
+            path.node.arguments[0].properties[index] = t.objectExpression([
+              t.objectProperty(t.identifier('id'), t.stringLiteral(idPath)),
+              t.objectProperty(t.identifier('defaultMessage'), t.stringLiteral(value))
+            ])
+          }
+          else {
+            throw new Error('Smth wrong')
+          }
         });
       }
     }
