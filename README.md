@@ -23,11 +23,11 @@ to
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  "title": {
+  title: {
     id: 'app.components.Header.title',
     defaultMessage: 'Title'
   },
-  {
+  description: {
     id: 'app.components.Header.description',
     defaultMessage: 'Description'
   },

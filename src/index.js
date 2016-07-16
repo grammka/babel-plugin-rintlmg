@@ -47,7 +47,7 @@ module.exports = function(babel) {
             )
           }
           else if (t.isStringLiteral(property.value)) {
-            path.node.arguments[0].properties[index] = t.objectExpression([
+            path.node.arguments[0].properties[index].value = t.objectExpression([
               t.objectProperty(t.identifier('id'), t.stringLiteral(idPath)),
               t.objectProperty(t.identifier('defaultMessage'), t.stringLiteral(value))
             ])
