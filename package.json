@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-rintlmg",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Babel plugin for https://github.com/grammka/react-intl-messages-generator",
   "author": {
     "name": "Pavel Ivanov",
@@ -19,7 +19,9 @@
   ],
   "license": "MIT",
   "main": "./src",
-  "scripts": {},
+  "scripts": {
+    "test": "node ./test/run.js ./test/example.js"
+  },
   "devDependencies": {
     "babel-core": "^6.10.4"
   }

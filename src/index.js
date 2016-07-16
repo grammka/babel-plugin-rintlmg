@@ -1,12 +1,11 @@
 module.exports = function(babel) {
   var t = babel.types;
-  var idsPath;
 
   return {
     visitor: {
-      VariableDeclaration: function(path) {
-        if (path.node.loc && path.node.loc.start.line == 1) {
-          path.insertBefore(
+      Program: {
+        exit: function(path) {
+          path.unshiftContainer('body', [
             t.importDeclaration(
               [
                 t.importSpecifier(
@@ -16,35 +15,35 @@ module.exports = function(babel) {
               ],
               t.stringLiteral('react-intl')
             )
-          );
-          
-          idsPath = path.node.declarations[0].init.value;
-
-          path.remove();
+          ]);
         }
       },
       
-      ExportDefaultDeclaration: function(path) {
-        if (!t.isCallExpression(path.node.declaration)) {
+      ExpressionStatement: function(path) {
+        if (path.node.expression.callee.name == 'defineMessages') {
           path.replaceWith(
-            t.exportDefaultDeclaration(
-              t.callExpression(
-                t.identifier('defineMessages'),
-                [ path.node.declaration ]
-              )
-            )
+            t.exportDefaultDeclaration(path.node.expression)
           )
         }
       },
-      
-      ObjectExpression: function(path) {
-        if (!t.isExportDefaultDeclaration(path.parent) && !t.isCallExpression(path.parent)) {
-          var idPath = `${ idsPath }.${ path.parent.key.name || path.parent.key.value }`;
-          
-          path.node.properties.push(
-            t.objectProperty(t.identifier('id'), t.stringLiteral(idPath))
-          );
+
+      CallExpression: function(path) {
+        if (path.node.callee.name != 'defineMessages' || path.node.loc.start.line != 1) {
+          return;
         }
+       
+        var ids = path.node.arguments[0].properties[0].value.value;
+       
+        path.node.arguments[0].properties.splice(0, 1);
+       
+        path.node.arguments[0].properties.forEach(function(item) {
+        	var key = item.key.value || item.key.name;
+          var idPath = `${ ids }.${ key }`;
+       
+          item.value.properties.unshift(
+            t.objectProperty(t.identifier('id'), t.stringLiteral(idPath))
+          )
+        });
       }
     }
   };
