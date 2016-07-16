@@ -1,5 +1,5 @@
 # babel-plugin-rintlmg
-Babel plugin for https://github.com/grammka/react-intl-messages-generator
+Babel plugin for transforming compact messages to `react-intl` (https://github.com/yahoo/react-intl) format
 
 Transforms
 
