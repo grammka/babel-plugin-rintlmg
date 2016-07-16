@@ -38,7 +38,6 @@ module.exports = function(babel) {
 
         path.node.arguments[0].properties.forEach(function(property, index) {
           var key       = property.key.value || property.key.name;
-          var value     = property.value.value || property.value.name;
           var idPath    = `${ ids }.${ key }`;
 
           if (t.isObjectExpression(property.value)) {
@@ -46,10 +45,10 @@ module.exports = function(babel) {
               t.objectProperty(t.identifier('id'), t.stringLiteral(idPath))
             )
           }
-          else if (t.isStringLiteral(property.value)) {
+          else if (t.isStringLiteral(property.value) || t.isTemplateLiteral(property.value)) {
             path.node.arguments[0].properties[index].value = t.objectExpression([
               t.objectProperty(t.identifier('id'), t.stringLiteral(idPath)),
-              t.objectProperty(t.identifier('defaultMessage'), t.stringLiteral(value))
+              t.objectProperty(t.identifier('defaultMessage'), property.value)
             ])
           }
           else {

@@ -1,11 +1,13 @@
 defineMessages({
   ids: 'app.components.Header',
-  title: {
-    defaultMessage: 'Title',
+  object: {
+    defaultMessage: 'Object',
+    description: 'Input on the left side of Header',
   },
-  description: 'Description',
-  search: {
-    defaultMessage: 'Find smth...',
-    description: 'Input on the left side of Header'
-  },
+  template: `
+    Template
+    with
+    rows
+  `,
+  string: 'String'
 })

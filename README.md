@@ -6,14 +6,16 @@ Transforms
 ```javascript
 defineMessages({
   ids: 'app.components.Header',
-  title: {
-    defaultMessage: 'Title',
+  object: {
+    defaultMessage: 'Object',
+    description: 'Input on the left side of Header',
   },
-  description: 'Description',
-  search: {
-    defaultMessage: 'Find smth...',
-    description: 'Input on the left side of Header'
-  },
+  template: `
+    Template
+    with
+    rows
+  `,
+  string: 'String'
 })
 ```
 
@@ -23,18 +25,23 @@ to
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  title: {
-    id: 'app.components.Header.title',
-    defaultMessage: 'Title'
-  },
-  description: {
-    id: 'app.components.Header.description',
-    defaultMessage: 'Description'
-  },
-  search: {
-    id: 'app.components.Header.search',
-    defaultMessage: 'Find smth...',
+  object: {
+    id: 'app.components.Header.object',
+    defaultMessage: 'Object',
     description: 'Input on the left side of Header'
+  },
+  template: {
+    id: 'app.components.Header.template',
+    defaultMessage: `
+      Template
+      with
+      rows
+    `
+  },
+  string: {
+    id: 'app.components.Header.string',
+    defaultMessage: 'String'
   }
 });
+
 ```
