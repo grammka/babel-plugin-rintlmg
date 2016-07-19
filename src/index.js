@@ -3,58 +3,34 @@ module.exports = function(babel) {
 
   return {
     visitor: {
-      Program: {
-        exit: function(path) {
-          path.unshiftContainer('body', [
-            t.importDeclaration(
-              [
-                t.importSpecifier(
-                  t.identifier('defineMessages'),
-                  t.identifier('defineMessages')
-                )
-              ],
-              t.stringLiteral('react-intl')
-            )
-          ]);
+      ExportDefaultDeclaration: function(path) {
+        if (path.node.declaration.callee && path.node.declaration.callee.name == 'defineMessages') {
+          var objectProperties = path.node.declaration.arguments[0].properties;
+
+          var ids = objectProperties[0].value.value;
+          
+          objectProperties.splice(0, 1);
+          
+          objectProperties.forEach(function(property, index) {
+            var key       = property.key.value || property.key.name;
+            var idPath    = `${ ids }.${ key }`;
+          
+            if (t.isObjectExpression(property.value)) {
+              property.value.properties.unshift(
+                t.objectProperty(t.identifier('id'), t.stringLiteral(idPath))
+              )
+            }
+            else if (t.isStringLiteral(property.value) || t.isTemplateLiteral(property.value)) {
+              objectProperties[index].value = t.objectExpression([
+                t.objectProperty(t.identifier('id'), t.stringLiteral(idPath)),
+                t.objectProperty(t.identifier('defaultMessage'), property.value)
+              ])
+            }
+            else {
+              throw new Error('Smth wrong')
+            }
+          });
         }
-      },
-
-      ExpressionStatement: function(path) {
-        if (path.node.expression.callee && path.node.expression.callee.name == 'defineMessages') {
-          path.replaceWith(
-            t.exportDefaultDeclaration(path.node.expression)
-          )
-        }
-      },
-
-      CallExpression: function(path) {
-        if (!path.node.callee || path.node.callee.name != 'defineMessages' || path.node.loc.start.line != 1) {
-          return;
-        }
-
-        var ids = path.node.arguments[0].properties[0].value.value;
-
-        path.node.arguments[0].properties.splice(0, 1);
-
-        path.node.arguments[0].properties.forEach(function(property, index) {
-          var key       = property.key.value || property.key.name;
-          var idPath    = `${ ids }.${ key }`;
-
-          if (t.isObjectExpression(property.value)) {
-            property.value.properties.unshift(
-              t.objectProperty(t.identifier('id'), t.stringLiteral(idPath))
-            )
-          }
-          else if (t.isStringLiteral(property.value) || t.isTemplateLiteral(property.value)) {
-            path.node.arguments[0].properties[index].value = t.objectExpression([
-              t.objectProperty(t.identifier('id'), t.stringLiteral(idPath)),
-              t.objectProperty(t.identifier('defaultMessage'), property.value)
-            ])
-          }
-          else {
-            throw new Error('Smth wrong')
-          }
-        });
       }
     }
   };
