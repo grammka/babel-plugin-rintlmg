@@ -1,5 +1,5 @@
 {
-  "name": "babel-plugin-rintlmg",
+  "name": "@eagle/babel-plugin-rintlmg",
   "version": "2.2.2",
   "description": "Babel plugin for transforming react-intl messages format",
   "author": {
