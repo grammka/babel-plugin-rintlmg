@@ -4,7 +4,9 @@ Babel plugin for transforming compact messages to `react-intl` (https://github.c
 Transforms
 
 ```javascript
-defineMessages({
+import { defineMessages } from 'react-intl'
+
+export default defineMessages({
   ids: 'app.components.Header',
   object: {
     defaultMessage: 'Object',
@@ -15,7 +17,7 @@ defineMessages({
     with
     rows
   `,
-  string: 'String'
+  string: 'String',
 })
 ```
 
