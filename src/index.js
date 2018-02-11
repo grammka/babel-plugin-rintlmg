@@ -1,42 +1,42 @@
 module.exports = function(babel) {
-  const t = babel.types;
+  var t = babel.types;
+  
+  var getMessage = function (id, value) {
+    return t.objectExpression([
+      t.objectProperty(t.identifier('id'), t.stringLiteral(id)),
+      t.objectProperty(t.identifier('defaultMessage'), value)
+    ])
+  };
+
+  var transformProps = function (properties, rootPath) {
+    properties.forEach(function(property, index) {
+      var key       = property.key.value || property.key.name;
+      var value     = property.value;
+      var idPath    = `${rootPath}.${key}`;
+
+      if (t.isObjectExpression(value)) {
+        var nestedProperties = value.properties;
+
+        transformProps(nestedProperties, idPath);
+      }
+      else if (t.isStringLiteral(property.value) || t.isTemplateLiteral(value)) {
+        properties[index].value = getMessage(idPath, value)
+      }
+      else {
+        throw new Error('Smth wrong')
+      }
+    })
+  };
 
   return {
     visitor: {
       ExportDefaultDeclaration: function(path, state) {
         if (path.node.declaration.callee && path.node.declaration.callee.name === 'defineMessages') {
-          const pathname          = state.file.opts.filename;
-          const rootId            = pathname.replace(process.cwd() + '/', '').replace(/\/[^/]+.js$/, '').replace(/\//g, '.');
-          const objectProperties  = path.node.declaration.arguments[0].properties;
+          var pathname          = state.file.opts.filename;
+          var rootId            = pathname.replace(process.cwd() + '/', '').replace(/\/[^/]+.js$/, '').replace(/\//g, '.');
+          var objectProperties  = path.node.declaration.arguments[0].properties;
 
-          objectProperties.forEach(function(property, index) {
-            const key       = property.key.value || property.key.name;
-
-            const idPath    = `${rootId}.${key}`;
-
-            if (t.isObjectExpression(property.value)) {
-              const properties = objectProperties[index].value.properties;
-
-              properties.forEach(function(property, index) {
-                const key     = property.key.value || property.key.name;
-                const value   = property.value;
-
-                properties[index].value = t.objectExpression([
-                  t.objectProperty(t.identifier('id'), t.stringLiteral(`${idPath}.${key}`)),
-                  t.objectProperty(t.identifier('defaultMessage'), value)
-                ]);
-              });
-            }
-            else if (t.isStringLiteral(property.value) || t.isTemplateLiteral(property.value)) {
-              objectProperties[index].value = t.objectExpression([
-                t.objectProperty(t.identifier('id'), t.stringLiteral(idPath)),
-                t.objectProperty(t.identifier('defaultMessage'), property.value)
-              ])
-            }
-            else {
-              throw new Error('Smth wrong')
-            }
-          })
+          transformProps(objectProperties, rootId);
         }
       }
     }
