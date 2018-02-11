@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-rintlmg",
-  "version": "2.2.2",
+  "version": "2.4.0",
   "description": "Babel plugin for transforming react-intl messages format",
   "author": {
     "name": "Pavel Ivanov",
