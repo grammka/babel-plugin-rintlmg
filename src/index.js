@@ -1,60 +1,43 @@
 module.exports = function(babel) {
-  var t = babel.types;
+  const t = babel.types;
 
   return {
     visitor: {
-      Program: {
-        exit: function(path) {
-          path.unshiftContainer('body', [
-            t.importDeclaration(
-              [
-                t.importSpecifier(
-                  t.identifier('defineMessages'),
-                  t.identifier('defineMessages')
-                )
-              ],
-              t.stringLiteral('react-intl')
-            )
-          ]);
+      ExportDefaultDeclaration: function(path, state) {
+        if (path.node.declaration.callee && path.node.declaration.callee.name === 'defineMessages') {
+          const pathname          = state.file.opts.filename;
+          const rootId            = pathname.replace(process.cwd() + '/', '').replace(/\/[^/]+.js$/, '').replace(/\//g, '.');
+          const objectProperties  = path.node.declaration.arguments[0].properties;
+
+          objectProperties.forEach(function(property, index) {
+            const key       = property.key.value || property.key.name;
+
+            const idPath    = `${rootId}.${key}`;
+
+            if (t.isObjectExpression(property.value)) {
+              const properties = objectProperties[index].value.properties;
+
+              properties.forEach(function(property, index) {
+                const key     = property.key.value || property.key.name;
+                const value   = property.value;
+
+                properties[index].value = t.objectExpression([
+                  t.objectProperty(t.identifier('id'), t.stringLiteral(`${idPath}.${key}`)),
+                  t.objectProperty(t.identifier('defaultMessage'), value)
+                ]);
+              });
+            }
+            else if (t.isStringLiteral(property.value) || t.isTemplateLiteral(property.value)) {
+              objectProperties[index].value = t.objectExpression([
+                t.objectProperty(t.identifier('id'), t.stringLiteral(idPath)),
+                t.objectProperty(t.identifier('defaultMessage'), property.value)
+              ])
+            }
+            else {
+              throw new Error('Smth wrong')
+            }
+          })
         }
-      },
-
-      ExpressionStatement: function(path) {
-        if (path.node.expression.callee && path.node.expression.callee.name == 'defineMessages') {
-          path.replaceWith(
-            t.exportDefaultDeclaration(path.node.expression)
-          )
-        }
-      },
-
-      CallExpression: function(path) {
-        if (!path.node.callee || path.node.callee.name != 'defineMessages' || path.node.loc.start.line != 1) {
-          return;
-        }
-
-        var ids = path.node.arguments[0].properties[0].value.value;
-
-        path.node.arguments[0].properties.splice(0, 1);
-
-        path.node.arguments[0].properties.forEach(function(property, index) {
-          var key       = property.key.value || property.key.name;
-          var idPath    = `${ ids }.${ key }`;
-
-          if (t.isObjectExpression(property.value)) {
-            property.value.properties.unshift(
-              t.objectProperty(t.identifier('id'), t.stringLiteral(idPath))
-            )
-          }
-          else if (t.isStringLiteral(property.value) || t.isTemplateLiteral(property.value)) {
-            path.node.arguments[0].properties[index].value = t.objectExpression([
-              t.objectProperty(t.identifier('id'), t.stringLiteral(idPath)),
-              t.objectProperty(t.identifier('defaultMessage'), property.value)
-            ])
-          }
-          else {
-            throw new Error('Smth wrong')
-          }
-        });
       }
     }
   };

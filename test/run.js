@@ -1,18 +1,9 @@
-var fs      = require('fs');
 var babel   = require('babel-core');
 var plugin  = require('../src');
 
 
-var fileName = process.argv[2];
-
-fs.readFile(fileName, function(err, data) {
-  if (err) throw err;
-
-  var src = data.toString();
-
-  var out = babel.transform(src, {
-    plugins: [ plugin ]
-  });
-
-  console.log(out.code);
+var out = babel.transformFileSync('/Users/grammka/GitHubProjects/babel-plugin-rintlmg/test/example.js', {
+  plugins: [ plugin ]
 });
+
+console.log(out.code);

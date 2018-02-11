@@ -3,13 +3,14 @@ Babel plugin for transforming compact messages to `react-intl` (https://github.c
 
 Transforms
 
+
+**`./app/components/Foo.js`**
 ```javascript
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  ids: 'app.components.Header',
   object: {
-    defaultMessage: 'Object',
+    title: 'Title',
     description: 'Input on the left side of Header',
   },
   template: `
@@ -28,12 +29,17 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   object: {
-    id: 'app.components.Header.object',
-    defaultMessage: 'Object',
-    description: 'Input on the left side of Header'
+    title: {
+      id: 'app.components.Foo.object.title',
+      defaultMessage: 'Title',
+    },
+    description: {
+      id: 'app.components.Foo.object.description',
+      defaultMessage: 'Input on the left side of Header',
+    },
   },
   template: {
-    id: 'app.components.Header.template',
+    id: 'app.components.Foo.template',
     defaultMessage: `
       Template
       with
@@ -41,7 +47,7 @@ export default defineMessages({
     `
   },
   string: {
-    id: 'app.components.Header.string',
+    id: 'app.components.Foo.string',
     defaultMessage: 'String'
   }
 });

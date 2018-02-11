@@ -1,7 +1,8 @@
-defineMessages({
-  ids: 'app.components.Header',
+import { defineMessages } from 'react-intl'
+
+export default defineMessages({
   object: {
-    defaultMessage: 'Object',
+    title: 'Title',
     description: 'Input on the left side of Header',
   },
   template: `
