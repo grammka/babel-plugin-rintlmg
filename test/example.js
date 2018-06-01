@@ -2,16 +2,26 @@ import { defineMessages } from 'react-intl'
 
 export default defineMessages({
   object: {
-    title: 'Title',
-    description: 'Input on the left side of Header',
+    title: {
+      en: 'Title',
+    },
+    description: {
+      en: 'Input on the left side of Header',
+    },
     nested: {
-      title: 'Nested title'
-    }
+      title: {
+        en: 'Nested title',
+      },
+    },
   },
-  template: `
-    Template
-    with
-    rows
-  `,
-  string: 'String'
+  template: {
+    en: `
+      Template
+      with
+      rows
+    `,
+  },
+  string: {
+    en: 'String',
+  },
 })
