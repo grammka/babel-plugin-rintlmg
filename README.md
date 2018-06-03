@@ -3,53 +3,116 @@ Babel plugin for transforming compact messages to `react-intl` (https://github.c
 
 Transforms
 
-
 **`./app/components/Foo.js`**
 ```javascript
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  object: {
-    title: 'Title',
-    description: 'Input on the left side of Header',
+  withChildren: {
+    title: {
+      en: 'Nested title',
+      es: 'Título anidado',
+    },
+    description: {
+      en: 'Nested description',
+      es: 'Descripción anidada',
+    },
+    withChildren: {
+      title: {
+        en: 'Nested nested title',
+        es: 'Título anidado anidado',
+      }
+    },
   },
-  template: `
-    Template
-    with
-    rows
-  `,
-  string: 'String',
+  template: {
+    en: `
+      Template
+      with
+      rows
+    `,
+    es: `
+      Modelo
+      con
+      filas
+    `,
+  },
+  string: {
+    en: 'String',
+    es: 'Cuerda',
+  },
 })
 ```
 
-to 
+with plugin option `{ messages: true }` to
 
 ```javascript
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  object: {
+  withChildren: {
     title: {
-      id: 'app.components.Foo.object.title',
-      defaultMessage: 'Title',
+      en: 'Nested title',
+      es: 'Título anidado',
+      id: 'test.withChildren'
     },
     description: {
-      id: 'app.components.Foo.object.description',
-      defaultMessage: 'Input on the left side of Header',
+      en: 'Nested description',
+      es: 'Descripción anidada',
+      id: 'test.withChildren'
     },
+    withChildren: {
+      title: {
+        en: 'Nested nested title',
+        es: 'Título anidado anidado',
+        id: 'test.withChildren.withChildren'
+      }
+    }
   },
   template: {
-    id: 'app.components.Foo.template',
-    defaultMessage: `
+    en: `
       Template
       with
       rows
-    `
+    `,
+    es: `
+      Modelo
+      con
+      filas
+    `,
+    id: 'test'
   },
   string: {
-    id: 'app.components.Foo.string',
-    defaultMessage: 'String'
+    en: 'String',
+    es: 'Cuerda',
+    id: 'test'
   }
 });
+```
 
+and without options to
+
+```
+import { defineMessages } from 'react-intl';
+
+export default defineMessages({
+  withChildren: {
+    title: {
+      id: 'test.withChildren'
+    },
+    description: {
+      id: 'test.withChildren'
+    },
+    withChildren: {
+      title: {
+        id: 'test.withChildren.withChildren'
+      }
+    }
+  },
+  template: {
+    id: 'test'
+  },
+  string: {
+    id: 'test'
+  }
+});
 ```

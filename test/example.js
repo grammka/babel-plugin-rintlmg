@@ -1,17 +1,20 @@
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  object: {
+  withChildren: {
     title: {
-      en: 'Title',
+      en: 'Nested title',
+      es: 'Título anidado',
     },
     description: {
-      en: 'Input on the left side of Header',
+      en: 'Nested description',
+      es: 'Descripción anidada',
     },
-    nested: {
+    withChildren: {
       title: {
-        en: 'Nested title',
-      },
+        en: 'Nested nested title',
+        es: 'Título anidado anidado',
+      }
     },
   },
   template: {
@@ -20,8 +23,14 @@ export default defineMessages({
       with
       rows
     `,
+    es: `
+      Modelo
+      con
+      filas
+    `,
   },
   string: {
     en: 'String',
+    es: 'Cuerda',
   },
 })
