@@ -15,22 +15,23 @@ module.exports = function (babel) {
 
   var transformProps = function ({ props, opts, rootPath }) {
     props.forEach(function(prop, index) {
-      var key   = prop.key.value || prop.key.name;
-      var node  = prop.value;
+      var key     = prop.key.value || prop.key.name;
+      var idPath  = `${rootPath}.${key}`;
+      var node    = prop.value;
 
       if (isTranslationsNode(node)) {
         if (opts.messages) {
-          node.properties.push(getIdNode(rootPath))
+          node.properties.push(getIdNode(idPath))
         }
         else {
           props[index].value = t.objectExpression([
-            getIdNode(rootPath),
+            getIdNode(idPath),
           ])
         }
       }
       else {
         var nestedProps  = node.properties;
-        var idPath       = `${rootPath}.${key}`;
+
 
         transformProps({
           props: nestedProps,

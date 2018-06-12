@@ -14,18 +14,18 @@ export default defineMessages({
     title: {
       en: 'Nested title',
       es: 'Título anidado',
-      id: 'test.withChildren'
+      id: 'test.withChildren.title'
     },
     description: {
       en: 'Nested description',
       es: 'Descripción anidada',
-      id: 'test.withChildren'
+      id: 'test.withChildren.description'
     },
     withChildren: {
       title: {
         en: 'Nested nested title',
         es: 'Título anidado anidado',
-        id: 'test.withChildren.withChildren'
+        id: 'test.withChildren.withChildren.title'
       }
     }
   },
@@ -40,12 +40,12 @@ export default defineMessages({
       con
       filas
     \`,
-    id: 'test'
+    id: 'test.template'
   },
   string: {
     en: 'String',
     es: 'Cuerda',
-    id: 'test'
+    id: 'test.string'
   }
 });`
 
@@ -72,22 +72,22 @@ const withoutOptionExpected = `import { defineMessages } from 'react-intl';
 export default defineMessages({
   withChildren: {
     title: {
-      id: 'test.withChildren'
+      id: 'test.withChildren.title'
     },
     description: {
-      id: 'test.withChildren'
+      id: 'test.withChildren.description'
     },
     withChildren: {
       title: {
-        id: 'test.withChildren.withChildren'
+        id: 'test.withChildren.withChildren.title'
       }
     }
   },
   template: {
-    id: 'test'
+    id: 'test.template'
   },
   string: {
-    id: 'test'
+    id: 'test.string'
   }
 });`
 
