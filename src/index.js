@@ -48,9 +48,18 @@ module.exports = function (babel) {
         // find `defineMessages({`
         if (path.node.declaration.callee && path.node.declaration.callee.name === 'defineMessages') {
           // get file pathname to generate message `id`
-          var pathname          = state.file.opts.filename;
-          var rootPath          = pathname.replace(process.cwd() + '/', '').replace(/\/[^/]+.js$/, '').replace(/\//g, '.');
-          var objectProperties  = path.node.declaration.arguments[0].properties;
+          var pathname  = state.file.opts.filename.replace(/\\/g, '/')
+          var cwd       = process.cwd().replace(/\\/g, '/')
+
+          var rootPath = (
+            pathname
+              .replace(cwd + '/', '')
+              .replace(/\/[^/]+.js$/, '')
+              .replace(/\//g, '.')
+              .replace(/^C:[\\/]/, '')
+          );
+
+          var objectProperties = path.node.declaration.arguments[0].properties;
 
           transformProps({
             props: objectProperties,
