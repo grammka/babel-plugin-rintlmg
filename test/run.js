@@ -71,13 +71,13 @@ export default defineMessages({
   string: {
     en: 'String',
     es: 'Cuerda',
-    id: "0"
+    id: "2"
   },
   withChildren: {
     title: {
       en: 'Nested title',
       es: 'Título anidado',
-      id: "1"
+      id: "3"
     }
   }
 });`)

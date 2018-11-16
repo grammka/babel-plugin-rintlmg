@@ -47,11 +47,6 @@ module.exports = function (babel) {
 
   return {
     visitor: {
-      Program: {
-        exit() {
-          index = 0;
-        }
-      },
 
       ExportDefaultDeclaration: function(path, state) {
         // find `defineMessages({`
