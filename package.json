@@ -23,6 +23,6 @@
     "test": "node ./test/run.js ./test/example.js"
   },
   "devDependencies": {
-    "babel-core": "^6.10.4"
+    "@babel/core": "^7.1.6"
   }
 }

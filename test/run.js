@@ -1,51 +1,25 @@
-const path    = require('path')
-const babel   = require('babel-core')
-const plugin  = require('../src')
+const path                = require('path')
+const transformFileSync   = require('@babel/core').transformFileSync
+const plugin              = require('../src')
 
 
-const withOptionOutput = babel.transformFileSync(path.resolve(process.cwd(), 'test/example.js'), {
+const withOptionOutput = transformFileSync(path.resolve(process.cwd(), 'test/example.js'), {
   plugins: [ [ plugin, { messages: true } ] ],
 })
 
 const withOptionExpected = `import { defineMessages } from 'react-intl';
-
 export default defineMessages({
+  string: {
+    en: 'String',
+    es: 'Cuerda',
+    id: "test.string"
+  },
   withChildren: {
     title: {
       en: 'Nested title',
       es: 'Título anidado',
-      id: 'test.withChildren.title'
-    },
-    description: {
-      en: 'Nested description',
-      es: 'Descripción anidada',
-      id: 'test.withChildren.description'
-    },
-    withChildren: {
-      title: {
-        en: 'Nested nested title',
-        es: 'Título anidado anidado',
-        id: 'test.withChildren.withChildren.title'
-      }
+      id: "test.withChildren.title"
     }
-  },
-  template: {
-    en: \`
-      Template
-      with
-      rows
-    \`,
-    es: \`
-      Modelo
-      con
-      filas
-    \`,
-    id: 'test.template'
-  },
-  string: {
-    en: 'String',
-    es: 'Cuerda',
-    id: 'test.string'
   }
 });`
 
@@ -63,31 +37,19 @@ else {
 console.log('\n================================================\n\n')
 
 
-const withoutOptionOutput = babel.transformFileSync(path.resolve(process.cwd(), 'test/example.js'), {
+const withoutOptionOutput = transformFileSync(path.resolve(process.cwd(), 'test/example.js'), {
   plugins: [ plugin ],
 })
 
 const withoutOptionExpected = `import { defineMessages } from 'react-intl';
-
 export default defineMessages({
+  string: {
+    id: "test.string"
+  },
   withChildren: {
     title: {
-      id: 'test.withChildren.title'
-    },
-    description: {
-      id: 'test.withChildren.description'
-    },
-    withChildren: {
-      title: {
-        id: 'test.withChildren.withChildren.title'
-      }
+      id: "test.withChildren.title"
     }
-  },
-  template: {
-    id: 'test.template'
-  },
-  string: {
-    id: 'test.string'
   }
 });`
 

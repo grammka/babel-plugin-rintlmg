@@ -1,13 +1,17 @@
 module.exports = function (babel) {
   var t = babel.types;
 
-  var getIdNode = function (id) {
+  var index = 0;
+
+  var getIdNode = function (idPath, opts) {
+    var id = opts.indexedIds ? String(index++) : idPath;
+
     return t.objectProperty(t.identifier('id'), t.stringLiteral(id));
   }
 
-  var isTranslationsNode = function (node) {
+  var isTranslationsNode = function (node, idPath) {
     if (!node.properties || !node.properties.length) {
-      throw new Error('babel-plugin-rintlmg: node can\'t be empty!')
+      throw new Error('babel-plugin-rintlmg: Check message by key "' + idPath + '", node can\'t be empty!')
     }
 
     return t.isStringLiteral(node.properties[0].value) || t.isTemplateLiteral(node.properties[0].value)
@@ -19,19 +23,18 @@ module.exports = function (babel) {
       var idPath  = `${rootPath}.${key}`;
       var node    = prop.value;
 
-      if (isTranslationsNode(node)) {
+      if (isTranslationsNode(node, idPath)) {
         if (opts.messages) {
-          node.properties.push(getIdNode(idPath))
+          node.properties.push(getIdNode(idPath, opts))
         }
         else {
           props[index].value = t.objectExpression([
-            getIdNode(idPath),
+            getIdNode(idPath, opts),
           ])
         }
       }
       else {
         var nestedProps  = node.properties;
-
 
         transformProps({
           props: nestedProps,
