@@ -1,7 +1,7 @@
+var index = 0;
+
 module.exports = function (babel) {
   var t = babel.types;
-
-  var index = 0;
 
   var getIdNode = function (idPath, opts) {
     var id = opts.indexedIds ? String(index++) : idPath;
@@ -47,6 +47,12 @@ module.exports = function (babel) {
 
   return {
     visitor: {
+      Program: {
+        exit() {
+          index = 0;
+        }
+      },
+
       ExportDefaultDeclaration: function(path, state) {
         // find `defineMessages({`
         if (path.node.declaration.callee && path.node.declaration.callee.name === 'defineMessages') {

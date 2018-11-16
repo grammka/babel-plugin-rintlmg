@@ -3,11 +3,42 @@ const transformFileSync   = require('@babel/core').transformFileSync
 const plugin              = require('../src')
 
 
-const withOptionOutput = transformFileSync(path.resolve(process.cwd(), 'test/example.js'), {
-  plugins: [ [ plugin, { messages: true } ] ],
-})
+const file = path.resolve(process.cwd(), 'test/example.js')
 
-const withOptionExpected = `import { defineMessages } from 'react-intl';
+const test = (options, expected) => {
+  const output = transformFileSync(file, {
+    plugins: [ [ plugin, options ] ],
+  })
+
+  console.log(output.code)
+
+  if (JSON.stringify(output.code) === JSON.stringify(expected)) {
+    console.log(`\nSUCCESS with ${JSON.stringify(options)}\n`)
+  }
+  else {
+    console.log(`\nERROR with ${JSON.stringify(options)}\n`)
+    process.exit(1)
+  }
+
+  console.log('================================================\n')
+}
+
+
+console.log('================================================\n')
+
+test({}, `import { defineMessages } from 'react-intl';
+export default defineMessages({
+  string: {
+    id: "test.string"
+  },
+  withChildren: {
+    title: {
+      id: "test.withChildren.title"
+    }
+  }
+});`)
+
+test({ messages: true }, `import { defineMessages } from 'react-intl';
 export default defineMessages({
   string: {
     en: 'String',
@@ -21,44 +52,32 @@ export default defineMessages({
       id: "test.withChildren.title"
     }
   }
-});`
+});`)
 
-console.log(withOptionOutput.code)
-
-if (JSON.stringify(withOptionOutput.code) === JSON.stringify(withOptionExpected)) {
-  console.log('\nWith option success\n')
-}
-else {
-  console.error('\nWith option error\n')
-  process.exit(1)
-}
-
-
-console.log('\n================================================\n\n')
-
-
-const withoutOptionOutput = transformFileSync(path.resolve(process.cwd(), 'test/example.js'), {
-  plugins: [ plugin ],
-})
-
-const withoutOptionExpected = `import { defineMessages } from 'react-intl';
+test({ indexedIds: true }, `import { defineMessages } from 'react-intl';
 export default defineMessages({
   string: {
-    id: "test.string"
+    id: "0"
   },
   withChildren: {
     title: {
-      id: "test.withChildren.title"
+      id: "1"
     }
   }
-});`
+});`)
 
-console.log(withoutOptionOutput.code)
-
-if (JSON.stringify(withoutOptionOutput.code) === JSON.stringify(withoutOptionExpected)) {
-  console.log('\n\nWithout option success\n')
-}
-else {
-  console.error('\nWithout option error\n')
-  process.exit(1)
-}
+test({ messages: true, indexedIds: true }, `import { defineMessages } from 'react-intl';
+export default defineMessages({
+  string: {
+    en: 'String',
+    es: 'Cuerda',
+    id: "0"
+  },
+  withChildren: {
+    title: {
+      en: 'Nested title',
+      es: 'Título anidado',
+      id: "1"
+    }
+  }
+});`)
